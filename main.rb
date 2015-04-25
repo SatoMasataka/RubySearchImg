@@ -65,30 +65,34 @@ class UseGoogleApi
 		@num=cbxNum
 	end
 	  
-	#ボタン押下時のアクション
+	#メイン：ボタン押下時のアクション
 	def actionPerformed(evt)
 
 		num=(@num.getSelectedItem()).to_i 	#画像検索数
-		fileInfoes=[]							#検索結果格納用
+		fileInfoes=[]												#検索結果格納用
+		fileInfoes1=[]
+		fileInfoes2=[]
 				
 		#既存の検索結果フレームを隠す
 		cleanFrames()
 		
 		#画像検索・コピー
 		if(@tx!=nil)			#通常検索
-				return if(@tx.getText()=="")
+				if(@tx.getText()=="")
+					JOptionPane.showMessageDialog(nil, "検索ワードを入れて！")
+					return 
+				end
     		fileInfoes=searchImages(@tx.getText(),num)
     	else					#ランダム検索
-    		num.times do |i|
-    			fileInfoes=(searchImages(GetRandomWord(),1))
-    		end
+    		fileInfoes=searchImages(GetRandomWord(),num)
     	end
     	
     	#画像表示
     	displayImages(fileInfoes)
-  	end
+	end
 	
-	
+	#検索しローカルにコピー
+	##[[filepathes],[finenames]]
 	def searchImages(searchWord,imgNum)
 		results = []
 		filePath=[]
@@ -165,6 +169,7 @@ class UseGoogleApi
 	
 	#子ウィンド作成
 	def childPictureWindow(title,fPath,frameX,frameY)
+
 		icon=ImageIcon.new(fPath)
 		
 		frame = JFrame.new(title)
@@ -250,7 +255,7 @@ panel.add btnClean
 panel.add(btnRand)
 
 #フレーム設定
-frame = JFrame.new("NASAが開発したすんごいシステム")
+frame = JFrame.new("画像検索システム")
 frame.getContentPane.add(panel, BorderLayout::WEST)
 frame.setDefaultCloseOperation(JFrame::EXIT_ON_CLOSE)
 frame.pack
